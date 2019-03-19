@@ -1,9 +1,12 @@
 plugins {
     id 'java'
+    id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
 
 group 'com.cyr1en'
-version '1.0-SNAPSHOT'
+def versionObj = new Version(major: 1, minor: 0, state: State.BETA)
+version "${versionObj.toString()}"
 
 sourceCompatibility = 1.8
 
@@ -12,5 +15,58 @@ repositories {
 }
 
 dependencies {
+    compile group: 'com.intellij', name: 'annotations', version: '9.0.4'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.198'
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.12.1'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.25.0'
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.198'
+}
+
+shadowJar {
+    archiveName = "${project.name}-${version}.jar"
+}
+
+artifacts {
+    archives shadowJar
+}
+
+lombok {
+    version = "1.18.4"
+    sha256 = ""
+}
+
+class Version {
+
+    String major, minor, full
+    State state
+
+    def getFullVersion() {
+        full = "$major.$minor.${getPatch()}${state.get()}"
+        return full
+    }
+
+    static def getPatch() {
+        def proc = "git describe --tags".execute()
+        proc.waitFor()
+        def tagInfo = proc.text
+        if(!tagInfo.contains('-'))
+            return 0
+        def currentTag = tagInfo.split('-')[1]
+        println "Current Tag: $currentTag"
+        return currentTag
+    }
+
+    String toString() {
+        getFullVersion()
+    }
+}
+
+enum State {
+    ALPHA, BETA, STABLE
+    String get() {
+        return this.name().equalsIgnoreCase("stable") ? "" : "-" +this.name()
+    }
 }
