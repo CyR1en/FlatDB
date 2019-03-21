@@ -84,8 +84,8 @@ public class DatabaseBuilder {
   }
 
   public Database build() throws SQLException {
-    if(Strings.isBlank(driverName)) throw new SQLException("The driver nameOverride was left empty!");
+    if(Strings.isBlank(driverName)) throw new SQLException("The driver name was left empty!");
     connectionURL = String.format(connectionURL, driverName, path);
-    return new Database(this);
+    return new FlatDatabase(this);
   }
 }

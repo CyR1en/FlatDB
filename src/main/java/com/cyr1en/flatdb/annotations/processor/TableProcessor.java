@@ -24,7 +24,7 @@
 
 package com.cyr1en.flatdb.annotations.processor;
 
-import com.cyr1en.flatdb.Database;
+import com.cyr1en.flatdb.FlatDatabase;
 import com.cyr1en.flatdb.FlatTable;
 import com.cyr1en.flatdb.annotations.Column;
 import com.cyr1en.flatdb.annotations.Table;
@@ -50,10 +50,10 @@ import java.util.stream.Stream;
 @Log
 public class TableProcessor {
 
-  private Database database;
+  private FlatDatabase database;
   private String db_prefix;
 
-  public TableProcessor(Database database) {
+  public TableProcessor(FlatDatabase database) {
     this.database = database;
     this.db_prefix = database.getDb_prefix();
   }

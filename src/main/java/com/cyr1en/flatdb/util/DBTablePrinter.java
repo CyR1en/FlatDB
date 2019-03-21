@@ -23,7 +23,7 @@
  */
 
 /*
-Database Table Printer
+FlatDatabase Table Printer
 Copyright (C) 2014  Hami Galip Torun
 
 Email: hamitorun@e-fabrika.net
@@ -332,7 +332,7 @@ public class DBTablePrinter {
    * {@link #DEFAULT_MAX_TEXT_COL_WIDTH} will be used to limit
    * the width of text columns (like a <code>VARCHAR</code> column).
    *
-   * @param conn Database connection object (java.sql.Connection)
+   * @param conn FlatDatabase connection object (java.sql.Connection)
    * @param tableName Name of the database table
    */
   public static void printTable(Connection conn, String tableName){
@@ -347,7 +347,7 @@ public class DBTablePrinter {
    * {@link #DEFAULT_MAX_TEXT_COL_WIDTH} will be used to limit
    * the width of text columns (like a <code>VARCHAR</code> column).
    *
-   * @param conn Database connection object (java.sql.Connection)
+   * @param conn FlatDatabase connection object (java.sql.Connection)
    * @param tableName Name of the database table
    * @param maxRows Number of max. rows to query and print
    */
@@ -363,7 +363,7 @@ public class DBTablePrinter {
    * <code>maxStringColWidth</code> will be used to limit
    * the width of text columns (like a <code>VARCHAR</code> column).
    *
-   * @param conn Database connection object (java.sql.Connection)
+   * @param conn FlatDatabase connection object (java.sql.Connection)
    * @param tableName Name of the database table
    * @param maxRows Number of max. rows to query and print
    * @param maxStringColWidth Max. width of text columns

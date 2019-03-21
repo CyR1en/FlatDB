@@ -26,10 +26,10 @@ package com.cyr1en.flatdb;
 
 public class FlatTable {
 
-  private Database db;
+  private FlatDatabase db;
   private String name;
 
-  public FlatTable(String name, Database db) {
+  public FlatTable(String name, FlatDatabase db) {
     this.name = name;
     this.db = db;
   }

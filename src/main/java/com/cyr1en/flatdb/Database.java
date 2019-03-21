@@ -24,99 +24,26 @@
 
 package com.cyr1en.flatdb;
 
-import com.cyr1en.flatdb.annotations.processor.TableProcessor;
-import lombok.Getter;
 import org.intellij.lang.annotations.Language;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class Database {
+public interface Database {
+  Optional<ResultSet> executeQuery(@Language("SQL") String query, String... replacements);
 
-  @Getter
-  private String db_prefix;
-  @Getter
-  private Connection connection;
-  @Getter
-  private Set<FlatTable> tables;
-  private Statement statement;
+  int executeUpdate(@Language("SQL") String sql, String... replacements);
 
-  Database(DatabaseBuilder builder) throws SQLException {
-    this.connection = DriverManager.getConnection(builder.getConnectionURL());
-    this.statement = connection.createStatement();
-    this.db_prefix = builder.getDatabasePrefix();
-    initializeTables(builder.getTables());
-  }
+  Optional<DatabaseMetaData> getMetaData();
 
-  public void initializeTables(List<Class> tableClasses) {
-    TableProcessor processor = new TableProcessor(this);
-    for (Class c : tableClasses)
-      processor.process(c);
-  }
+  String getDb_prefix();
 
-  public Optional<ResultSet> executeQuery(@Language("SQL") String query, String... replacements) {
-    try {
-      Statement statement = connection.createStatement();
-      String fQuery = String.format(query, (Object[]) replacements);
-      return Optional.of(statement.executeQuery(fQuery));
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      try {
-        if (!statement.isClosed()) {
-          statement.close();
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    }
-    return Optional.empty();
-  }
+  Connection getConnection();
 
-  public int executeUpdate(@Language("SQL") String sql, String... replacements) {
-    try {
-      Statement statement = connection.createStatement();
-      String fSql = String.format(sql, (Object[]) replacements);
-      return statement.executeUpdate(fSql);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      try {
-        if (!statement.isClosed()) {
-          statement.close();
-        }
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    }
-    return 0;
-  }
+  Set<FlatTable> getTables();
 
-  public Optional<DatabaseMetaData> getMetaData() {
-    try {
-      return Optional.of(connection.getMetaData());
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return Optional.empty();
-  }
-
-  public boolean tableExists(String tableName) {
-    System.out.println("Checking if " + tableName + " exists!");
-    List<String> tableNames = new ArrayList<>();
-    getMetaData().ifPresent(dmd -> {
-      try {
-        ResultSet rs = dmd.getTables(null, null, null, new String[]{"TABLE"});
-        while (rs.next())
-          tableNames.add(rs.getString("TABLE_NAME"));
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    });
-    return tableNames.stream().anyMatch(s -> s.equalsIgnoreCase(tableName));
-  }
-
+  boolean tableExists(String tableName);
 }
