@@ -75,7 +75,7 @@ public class DatabaseOptionsTest {
   @Test
   public void buildTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     String path;
-    String OS = (System.getProperty("os.nameOverride")).toUpperCase();
+    String OS = (System.getProperty("os.name")).toUpperCase();
     if (OS.contains("WIN")) {
       path = System.getenv("AppData");
       path += "/Local/Temp/FlatDBTest/testDB";

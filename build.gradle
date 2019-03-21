@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.cyr1en'
-def versionObj = new Version(major: 1, minor: 0, state: State.BETA)
+def versionObj = new Version(major: 1, minor: 0, state: State.NO_STATE)
 version "${versionObj.toString()}"
 
 sourceCompatibility = 1.8
@@ -30,6 +30,7 @@ shadowJar {
 }
 
 artifacts {
+    println("Tag: ${versionObj.getPatch()}")
     archives shadowJar
 }
 
@@ -52,10 +53,9 @@ class Version {
         def proc = "git describe --tags".execute()
         proc.waitFor()
         def tagInfo = proc.text
-        if(!tagInfo.contains('-'))
+        if (!tagInfo.contains('-'))
             return 0
         def currentTag = tagInfo.split('-')[1]
-        println "Current Tag: $currentTag"
         return currentTag
     }
 
@@ -65,8 +65,11 @@ class Version {
 }
 
 enum State {
-    ALPHA, BETA, STABLE
+    ALPHA, BETA, STABLE, NO_STATE
+
     String get() {
-        return this.name().equalsIgnoreCase("stable") ? "" : "-" +this.name()
+        if(this.name().equalsIgnoreCase('no_state'))
+            return ""
+        return this.name().equalsIgnoreCase("stable") ? "" : "-" + this.name()
     }
 }
