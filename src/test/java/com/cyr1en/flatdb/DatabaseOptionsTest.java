@@ -1,5 +1,6 @@
 package com.cyr1en.flatdb;
 
+import com.cyr1en.flatdb.util.Strings;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,18 +59,12 @@ public class DatabaseOptionsTest {
 
   @Test
   public void isBlankTest() {
-    try {
-      Method method = DatabaseBuilder.class.getDeclaredMethod("isBlank", CharSequence.class);
-      method.setAccessible(true);
+    Assertions.assertThat(Strings.isBlank("test")).isEqualTo(false);
+    Assertions.assertThat(Strings.isBlank("  _")).isEqualTo(false);
 
-      Assertions.assertThat(method.invoke(dbBuilder, "test")).isEqualTo(false);
-      Assertions.assertThat(method.invoke(dbBuilder, "  _")).isEqualTo(false);
+    Assertions.assertThat(Strings.isBlank("")).isEqualTo(true);
+    Assertions.assertThat(Strings.isBlank("     ")).isEqualTo(true);
 
-      Assertions.assertThat(method.invoke(dbBuilder, "")).isEqualTo(true);
-      Assertions.assertThat(method.invoke(dbBuilder, "   ")).isEqualTo(true);
-    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
-    }
   }
 
   @Test
