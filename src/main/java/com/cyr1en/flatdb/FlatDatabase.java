@@ -105,7 +105,6 @@ public class FlatDatabase implements Database {
   }
 
   public boolean tableExists(String tableName) {
-    System.out.println("Checking if " + tableName + " exists!");
     List<String> tableNames = new ArrayList<>();
     getMetaData().ifPresent(dmd -> {
       try {

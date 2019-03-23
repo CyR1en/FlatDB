@@ -24,7 +24,7 @@
 
 package com.cyr1en.flatdb.annotations.processor;
 
-import com.cyr1en.flatdb.FlatDatabase;
+import com.cyr1en.flatdb.Database;
 import com.cyr1en.flatdb.FlatTable;
 import com.cyr1en.flatdb.annotations.Column;
 import com.cyr1en.flatdb.annotations.Table;
@@ -50,10 +50,10 @@ import java.util.stream.Stream;
 @Log
 public class TableProcessor {
 
-  private FlatDatabase database;
+  private Database database;
   private String db_prefix;
 
-  public TableProcessor(FlatDatabase database) {
+  public TableProcessor(Database database) {
     this.database = database;
     this.db_prefix = database.getDb_prefix();
   }
@@ -83,11 +83,7 @@ public class TableProcessor {
   }
 
   private void processTable(String tableName) {
-    if (database.tableExists(tableName)) {
-      System.out.println("This table already exits!");
-      System.out.println("Will proceed to check table columns.");
-      return;
-    }
+    if (database.tableExists(tableName)) return;
     database.executeUpdate("CREATE TABLE %s", tableName);
   }
 
@@ -115,7 +111,6 @@ public class TableProcessor {
   private void processColumn(ResultSet rs, String tableName, Field field, boolean isSecondaryKey) {
     Column columnMeta = field.getAnnotation(Column.class);
     String colName = getColName(field);
-    System.out.println("Processing Column: " + colName);
 
     if (colExists(rs, colName)) return;
 
@@ -132,11 +127,10 @@ public class TableProcessor {
       sb.append("AUTO_INCREMENT ");
       String filteredPK = columnMeta.primaryKey() ? isSecondaryKey ? "" : "PRIMARY KEY" : "";
       sb.append(filteredPK);
-      database.executeUpdate(sb.toString(), tableName, colName, sqlTypePair.getType());
+      database.executeUpdate(sb.toString(), tableName, colName, sqlTypePair.getTypeName());
     } else {
       sb.append("DEFAULT %s");
-      System.out.println("Executing: " + sb.toString());
-      database.executeUpdate(sb.toString(), tableName, colName, sqlTypePair.getType(), sqlTypePair.getDefaultValue());
+      database.executeUpdate(sb.toString(), tableName, colName, sqlTypePair.getTypeName(), sqlTypePair.getDefaultValue());
     }
   }
 

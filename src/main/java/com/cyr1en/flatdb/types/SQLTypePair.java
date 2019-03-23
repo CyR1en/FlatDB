@@ -26,21 +26,25 @@ package com.cyr1en.flatdb.types;
 
 import com.cyr1en.flatdb.util.Pair;
 
-public class SQLTypePair extends Pair<String, String> {
+public class SQLTypePair extends Pair<Integer, String> {
 
-  private SQLTypePair(String o, String o2) {
+  public SQLTypePair(Integer o, String o2) {
     super(o, o2);
   }
 
-  public String getType() {
+  public Integer getType() {
     return getX();
+  }
+
+  public String getTypeName() {
+    return TypeMap.getName(getType());
   }
 
   public String getDefaultValue() {
     return getY();
   }
 
-  public static SQLTypePair of(String type, String defaultVal) {
+  public static SQLTypePair of(int type, String defaultVal) {
     return new SQLTypePair(type, defaultVal);
   }
 }

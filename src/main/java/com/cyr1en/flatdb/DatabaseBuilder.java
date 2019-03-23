@@ -25,6 +25,8 @@
 package com.cyr1en.flatdb;
 
 import com.cyr1en.flatdb.annotations.Table;
+import com.cyr1en.flatdb.types.SQLTypePair;
+import com.cyr1en.flatdb.types.TypeMap;
 import com.cyr1en.flatdb.util.Strings;
 import lombok.Getter;
 
@@ -32,6 +34,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -71,6 +74,16 @@ public class DatabaseBuilder {
 
   public DatabaseBuilder setPath(String path) {
     this.path = path;
+    return this;
+  }
+
+  public DatabaseBuilder addCustomTypes(Map<Class<?>, SQLTypePair> customTypes) {
+    TypeMap.addCustomType(customTypes);
+    return this;
+  }
+
+  public DatabaseBuilder addCustomType(Class<?> javaClass, SQLTypePair sqlTypePair) {
+    TypeMap.addCustomType(javaClass, sqlTypePair);
     return this;
   }
 

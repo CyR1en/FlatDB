@@ -24,9 +24,19 @@
 
 package com.cyr1en.flatdb.exceptions;
 
+import com.cyr1en.flatdb.types.TypeMap;
+
 public class JavaTypeConversionException extends RuntimeException {
 
+  private Class<?> missingType;
+
   public JavaTypeConversionException(Class<?> type) {
-    super("The type " + type.getName() + " is still missing from the TypeMap.");
+    super("The type " + type.getName() + " is still missing from the TypeMap. " +
+            "Try defining it in " + TypeMap.class.getName());
+    this.missingType = type;
+  }
+
+  public Class<?> getMissingType() {
+    return this.missingType;
   }
 }

@@ -27,23 +27,86 @@ package com.cyr1en.flatdb.types;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Primitives;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.sql.Types;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TypeMap {
 
-  private static final Map<Class<?>, SQLTypePair> JAVADT_TO_SQLDT = new ImmutableMap.Builder<Class<?>, SQLTypePair>()
-          .put(Boolean.class, SQLTypePair.of("BIT", "0"))
-          .put(String.class, SQLTypePair.of("VARCHAR", "null"))
-          .put(BigDecimal.class, SQLTypePair.of("NUMERIC", "0"))
-          .put(Integer.class, SQLTypePair.of("INTEGER", "0"))
-          .put(Long.class, SQLTypePair.of("BIGINT", "0"))
-          .put(Float.class, SQLTypePair.of("REAL", "0.0"))
-          .put(Double.class, SQLTypePair.of("FLOAT", "0.0"))
-          .build();
+  private static final Map<Class<?>, SQLTypePair> TYPE_MAP;
+  private static final Map<Class<?>, SQLTypePair> CUSTOM_TYPE_MAP;
+  private static final Map<Integer, String> TYPE_TO_NAME;
 
-  public static SQLTypePair getSQLType(Class<?> jClass) {
-    return jClass.isPrimitive() ? JAVADT_TO_SQLDT.get(Primitives.wrap(jClass)) : JAVADT_TO_SQLDT.get(jClass);
+  static {
+    TYPE_MAP = new ImmutableMap.Builder<Class<?>, SQLTypePair>()
+            .put(Boolean.class, SQLTypePair.of(Types.BIT, "0"))
+            .put(String.class, SQLTypePair.of(Types.VARCHAR, "null"))
+            .put(BigDecimal.class, SQLTypePair.of(Types.NUMERIC, "0"))
+            .put(Integer.class, SQLTypePair.of(Types.INTEGER, "0"))
+            .put(Long.class, SQLTypePair.of(Types.BIGINT, "0"))
+            .put(Float.class, SQLTypePair.of(Types.REAL, "0.0"))
+            .put(Double.class, SQLTypePair.of(Types.FLOAT, "0.0"))
+            .build();
+    CUSTOM_TYPE_MAP = new HashMap<>();
+    TYPE_TO_NAME = extractTypeNames();
   }
 
+  public static SQLTypePair getSQLType(Class<?> jClass) {
+    Class<?> checkedClass = jClass.isPrimitive() ? Primitives.wrap(jClass) : jClass;
+    if(CUSTOM_TYPE_MAP.containsKey(checkedClass))
+      return CUSTOM_TYPE_MAP.get(checkedClass);
+    return TYPE_MAP.get(checkedClass);
+  }
+
+  public static void addCustomType(Map<Class<?>, SQLTypePair> customTypes, boolean override) {
+    for(Map.Entry<Class<?>, SQLTypePair> entry : customTypes.entrySet())
+      addCustomType(entry.getKey(), entry.getValue(), override);
+  }
+
+  public static void addCustomType(Class<?> javaClass, SQLTypePair sqlTypePair, boolean override) {
+    boolean exists = CUSTOM_TYPE_MAP.containsKey(javaClass);
+    if(!exists)
+      CUSTOM_TYPE_MAP.put(javaClass, sqlTypePair);
+    else if(override) {
+      CUSTOM_TYPE_MAP.replace(javaClass, sqlTypePair);
+    }
+  }
+
+  public static void addCustomType(Map<Class<?>, SQLTypePair> customTypes) {
+    addCustomType(customTypes, false);
+  }
+
+  public static void addCustomType(Class<?> javaClass, SQLTypePair sqlTypePair) {
+    addCustomType(javaClass, sqlTypePair, false);
+  }
+
+  public static void removeCustomType(Map<Class<?>, SQLTypePair> typeMap) {
+    for(Map.Entry<Class<?>, SQLTypePair> entry : typeMap.entrySet())
+      CUSTOM_TYPE_MAP.remove(entry.getKey());
+  }
+
+  public static void removeCustomType(Class<?> javaClass) {
+    CUSTOM_TYPE_MAP.remove(javaClass);
+  }
+
+  public static String getName(int type) {
+    return TYPE_TO_NAME.get(type);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static Map<Integer, String> extractTypeNames() {
+    ImmutableMap.Builder builder = new ImmutableMap.Builder<Integer, String>();
+    Field[] fields = Types.class.getDeclaredFields();
+    Arrays.stream(fields).forEach(field -> {
+      try {
+        builder.put(field.get(null), field.getName());
+      } catch (IllegalAccessException e) {
+        e.printStackTrace();
+      }
+    });
+    return builder.build();
+  }
 }
