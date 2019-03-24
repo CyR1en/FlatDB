@@ -104,6 +104,7 @@ builder.addCustomType(UUID.class, SQLTypePair.of(Types.VARCHAR, "null"));
 //The last parameter indicates if we should override the definition for UUID.class
 TypeMap.addCustomType(UUID.class, SQLTypePair.of(Types.VARCHAR, "null"), true);
 ```
+To see more examples: [Click here](https://github.com/CyR1en/FlatDB/blob/master/src/test/java/com/cyr1en/flatdb/TypeMapTest.java)
 #### Process Tables in Runtime
 In cases where new classes are loaded in runtime and additional tables are needed to be processed. We can easily do so by using the TableProcessor class.
 ```java
