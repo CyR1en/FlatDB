@@ -6,6 +6,9 @@ An easy to use library for flat-file databases.
 - Auto-update tables when new fields are added in the Java class.
 - Easily connect to your database file.
 
+### Requirements
+Java 8+
+
 ### Dependencies
 - [Google Guava](https://github.com/google/guava)
 - [InteliJ IDEA Annotations](https://mvnrepository.com/artifact/com.intellij/annotations)
