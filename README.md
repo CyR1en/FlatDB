@@ -11,7 +11,7 @@ Java 8+
 
 ### Dependencies
 - [Google Guava](https://github.com/google/guava)
-- [InteliJ IDEA Annotations](https://mvnrepository.com/artifact/com.intellij/annotations)
+- [IntelliJ IDEA Annotations](https://mvnrepository.com/artifact/com.intellij/annotations)
 
 FlatDB comes with [H2 Driver](https://mvnrepository.com/artifact/com.h2database/h2).
 You can exclude it in your build tool if you wish to use a different driver.
