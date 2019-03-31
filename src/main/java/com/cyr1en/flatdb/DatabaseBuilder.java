@@ -42,9 +42,10 @@ public class DatabaseBuilder {
 
   @Getter private String path;
   @Getter private String driverName;
-  @Getter private String connectionURL;
   @Getter private String databasePrefix;
   @Getter private List<Class> tables;
+
+  private String connectionURL;
 
   public DatabaseBuilder() {
     path = "";
@@ -96,9 +97,13 @@ public class DatabaseBuilder {
     }
   }
 
+  public String getConnectionURL() {
+    return String.format(connectionURL, driverName, path);
+  }
+
   public Database build() throws SQLException {
     if(Strings.isBlank(driverName)) throw new SQLException("The driver name was left empty!");
-    connectionURL = String.format(connectionURL, driverName, path);
+    connectionURL = getConnectionURL();
     return new FlatDatabase(this);
   }
 }

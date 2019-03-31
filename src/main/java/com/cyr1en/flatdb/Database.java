@@ -29,8 +29,8 @@ import org.intellij.lang.annotations.Language;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public interface Database {
   Optional<ResultSet> executeQuery(@Language("SQL") String query, String... replacements);
@@ -43,7 +43,7 @@ public interface Database {
 
   Connection getConnection();
 
-  Set<FlatTable> getTables();
+  Map<Class<?>,FlatTable> getTables();
 
   boolean tableExists(String tableName);
 }

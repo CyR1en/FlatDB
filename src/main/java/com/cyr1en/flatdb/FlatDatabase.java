@@ -29,29 +29,27 @@ import lombok.Getter;
 import org.intellij.lang.annotations.Language;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class FlatDatabase implements Database {
 
   @Getter private String db_prefix;
   @Getter private Connection connection;
-  @Getter private Set<FlatTable> tables;
+  @Getter private Map<Class<?>,FlatTable> tables;
   private Statement statement;
 
   FlatDatabase(DatabaseBuilder builder) throws SQLException {
     this.connection = DriverManager.getConnection(builder.getConnectionURL());
     this.statement = connection.createStatement();
     this.db_prefix = builder.getDatabasePrefix();
+    this.tables = new HashMap<>();
     initializeTables(builder.getTables());
   }
 
   private void initializeTables(List<Class> tableClasses) {
     TableProcessor processor = new TableProcessor(this);
     for (Class c : tableClasses)
-      processor.process(c);
+      tables.put(c, processor.process(c));
   }
 
   @Override

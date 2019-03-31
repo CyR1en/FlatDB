@@ -24,14 +24,22 @@
 
 package com.cyr1en.flatdb;
 
+import org.intellij.lang.annotations.Language;
+
+import java.sql.ResultSet;
+import java.util.Optional;
+
 public class FlatTable {
 
-  private Database db;
-  private String name;
+  private String tableName;
+  private Database database;
 
-  public FlatTable(String name, Database db) {
-    this.name = name;
-    this.db = db;
+  public FlatTable(String tableName, Database database) {
+    this.tableName = tableName;
+    this.database = database;
   }
 
+  public Optional<ResultSet> executeQuery(@Language("SQL") String query, String... replacements) {
+   return null;
+  }
 }

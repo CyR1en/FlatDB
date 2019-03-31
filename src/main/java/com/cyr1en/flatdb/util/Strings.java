@@ -46,10 +46,12 @@ public class Strings {
    * @return if the {@link CharSequence} is blank.
    */
   public static boolean isBlank(CharSequence charSequence) {
-    if (charSequence == null) throw new NullPointerException("The provided parameter was null!");
-
-    if (charSequence.length() == 0) return true;
-    return charSequence.codePoints().allMatch(cp -> cp == 0x00000020);
+    if (isEmpty(charSequence)) return true;
+    for(int i = 0; i < charSequence.length(); i++) {
+      if((int) charSequence.charAt(i) != 0x00000020)
+        return false;
+    }
+    return true;
   }
 
   public static String join(Object[] array, CharSequence delimiter) {
@@ -58,4 +60,32 @@ public class Strings {
       joiner.add(String.valueOf(obj));
     return joiner.toString();
   }
+
+  /**
+   * Count the number of occurrences of a {@link CharSequence} in a different
+   * {@link CharSequence}.
+   *
+   * <p>This does not support non-planar characters (characters with code points > 0xFFFF).
+   * If the argument is a non-planar character, the method will just return 0</p>
+   *
+   * @param original The original {@link CharSequence} where this method will be counting
+   *                 occurrences from.
+   * @param argument The {@link CharSequence} that we will count the number of occurrences
+   *                 from the parameter "original".
+   * @return How many times the argument occurred in the parameter original.
+   */
+  public static int countOccurrences(CharSequence original, char argument) {
+    if (isBlank(original))
+      return 0;
+    int count = 0;
+    for (int i = 0; i < original.length(); ++i)
+      if (argument == original.charAt(i))
+        count++;
+    return count;
+  }
+
+  public static boolean isEmpty(CharSequence charSequence) {
+    return charSequence == null || charSequence.length() == 0;
+  }
+
 }
