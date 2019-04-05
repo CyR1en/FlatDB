@@ -53,7 +53,7 @@ public class TypeMapTest {
    */
   @Test
   public void b() {
-    TypeMap.addCustomType(TestClass.class, new SQLTypePair(Types.INTEGER, "0"), true);
+    TypeMap.addCustomType(TestClass.class, SQLTypePair.of(Types.INTEGER, "0"), true);
     SQLTypePair typePair = TypeMap.getSQLType(TestClass.class);
     Assertions.assertThat(typePair).isNotNull();
     Assertions.assertThat(typePair.getType()).isEqualTo(Types.INTEGER);
@@ -66,8 +66,8 @@ public class TypeMapTest {
   @Test
   public void c() {
     Map<Class<?>, SQLTypePair> customMap = new ImmutableMap.Builder<Class<?>, SQLTypePair>()
-            .put(TestClass.class, new SQLTypePair(Types.BIT, "1"))
-            .put(TestClass2.class, new SQLTypePair(Types.VARCHAR, "null")).build();
+            .put(TestClass.class, SQLTypePair.of(Types.BIT, "1"))
+            .put(TestClass2.class, SQLTypePair.of(Types.VARCHAR, "null")).build();
     TypeMap.addCustomType(customMap);
     SQLTypePair typePair1 = TypeMap.getSQLType(TestClass.class);
     Assertions.assertThat(typePair1).isNotNull();
@@ -86,8 +86,8 @@ public class TypeMapTest {
   @Test
   public void d() {
     Map<Class<?>, SQLTypePair> customMap = new ImmutableMap.Builder<Class<?>, SQLTypePair>()
-            .put(TestClass.class, new SQLTypePair(Types.BIT, "1"))
-            .put(TestClass2.class, new SQLTypePair(Types.VARCHAR, "null")).build();
+            .put(TestClass.class, SQLTypePair.of(Types.BIT, "1"))
+            .put(TestClass2.class, SQLTypePair.of(Types.VARCHAR, "null")).build();
     TypeMap.removeCustomType(customMap);
     Assertions.assertThat(TypeMap.getSQLType(TestClass.class)).isNull();
     Assertions.assertThat(TypeMap.getSQLType(TestClass.class)).isNull();

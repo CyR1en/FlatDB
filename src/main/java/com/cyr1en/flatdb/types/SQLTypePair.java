@@ -29,7 +29,7 @@ import com.cyr1en.flatdb.util.Pair;
 
 public class SQLTypePair extends Pair<Integer, String> {
 
-  public SQLTypePair(Integer o, String o2) {
+  private SQLTypePair(Integer o, String o2) {
     super(o, o2);
   }
 
