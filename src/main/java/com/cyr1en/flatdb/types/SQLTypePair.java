@@ -24,6 +24,7 @@
 
 package com.cyr1en.flatdb.types;
 
+import com.cyr1en.flatdb.util.FastStrings;
 import com.cyr1en.flatdb.util.Pair;
 
 public class SQLTypePair extends Pair<Integer, String> {
@@ -45,6 +46,18 @@ public class SQLTypePair extends Pair<Integer, String> {
   }
 
   public static SQLTypePair of(int type, String defaultVal) {
+    assertValidType(type);
+    assertNotBlank(defaultVal);
     return new SQLTypePair(type, defaultVal);
+  }
+
+  private static void assertValidType(int i) {
+    if(!TypeMap.TYPE_TO_NAME.containsKey(i))
+      throw new IllegalArgumentException(i + " is not a valid SQL Type.");
+  }
+
+  private static void assertNotBlank(String s) {
+    if(FastStrings.isBlank(s))
+      throw new IllegalArgumentException("SQLType pair value cannot be an blank string!");
   }
 }
