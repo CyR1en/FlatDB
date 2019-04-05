@@ -58,11 +58,6 @@ public class FastStrings {
     return true;
   }
 
-  public static void main(String[] args) {
-    String s = "     ";
-    System.out.println(isBlank(s));
-  }
-
   /**
    * Checks if a codepoint of a char is a 'non-printable' char.
    *
