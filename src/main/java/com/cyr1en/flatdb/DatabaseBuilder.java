@@ -27,7 +27,7 @@ package com.cyr1en.flatdb;
 import com.cyr1en.flatdb.annotations.Table;
 import com.cyr1en.flatdb.types.SQLTypePair;
 import com.cyr1en.flatdb.types.TypeMap;
-import com.cyr1en.flatdb.util.Strings;
+import com.cyr1en.flatdb.util.FastStrings;
 import lombok.Getter;
 
 import java.sql.SQLException;
@@ -57,8 +57,8 @@ public class DatabaseBuilder {
   }
 
   private void tryDefaultDrivers() {
-    if(Strings.isBlank(driverName)) tryDriverName("org.h2.Driver");
-    if(Strings.isBlank(driverName)) tryDriverName("org.sqlite.JDBC");
+    if(FastStrings.isBlank(driverName)) tryDriverName("org.h2.Driver");
+    if(FastStrings.isBlank(driverName)) tryDriverName("org.sqlite.JDBC");
   }
 
   public DatabaseBuilder appendTable(Class... schemas) {
@@ -102,7 +102,7 @@ public class DatabaseBuilder {
   }
 
   public Database build() throws SQLException {
-    if(Strings.isBlank(driverName)) throw new SQLException("The driver name was left empty!");
+    if(FastStrings.isBlank(driverName)) throw new SQLException("The driver name was left empty!");
     connectionURL = getConnectionURL();
     return new FlatDatabase(this);
   }

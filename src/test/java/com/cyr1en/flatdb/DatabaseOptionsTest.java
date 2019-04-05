@@ -1,6 +1,6 @@
 package com.cyr1en.flatdb;
 
-import com.cyr1en.flatdb.util.Strings;
+import com.cyr1en.flatdb.util.FastStrings;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,11 +59,11 @@ public class DatabaseOptionsTest {
 
   @Test
   public void isBlankTest() {
-    Assertions.assertThat(Strings.isBlank("test")).isEqualTo(false);
-    Assertions.assertThat(Strings.isBlank("  _")).isEqualTo(false);
+    Assertions.assertThat(FastStrings.isBlank("test")).isEqualTo(false);
+    Assertions.assertThat(FastStrings.isBlank("  _")).isEqualTo(false);
 
-    Assertions.assertThat(Strings.isBlank("")).isEqualTo(true);
-    Assertions.assertThat(Strings.isBlank("     ")).isEqualTo(true);
+    Assertions.assertThat(FastStrings.isBlank("")).isEqualTo(true);
+    Assertions.assertThat(FastStrings.isBlank("     ")).isEqualTo(true);
 
   }
 
