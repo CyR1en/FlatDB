@@ -32,7 +32,7 @@ import com.cyr1en.flatdb.exceptions.JavaTypeConversionException;
 import com.cyr1en.flatdb.exceptions.MissingAnnotationException;
 import com.cyr1en.flatdb.types.SQLTypePair;
 import com.cyr1en.flatdb.types.TypeMap;
-import com.cyr1en.flatdb.util.Strings;
+import com.cyr1en.flatdb.util.FastStrings;
 import com.google.common.collect.ImmutableList;
 import lombok.extern.java.Log;
 
@@ -71,14 +71,14 @@ public class TableProcessor {
 
   private String getTableName(Class classToProcess) {
     Table table = (Table) classToProcess.getAnnotation(Table.class);
-    String tableName = Strings.isBlank(table.nameOverride()) ?
+    String tableName = FastStrings.isBlank(table.nameOverride()) ?
             classToProcess.getSimpleName().toLowerCase() : table.nameOverride();
     return db_prefix + tableName;
   }
 
   private String getColName(Field field) {
     Column columnMeta = field.getAnnotation(Column.class);
-    return Strings.isBlank(columnMeta.nameOverride()) ?
+    return FastStrings.isBlank(columnMeta.nameOverride()) ?
             field.getName().toLowerCase() : columnMeta.nameOverride();
   }
 
@@ -104,7 +104,6 @@ public class TableProcessor {
           processColumn(rs, tableName, f, initializedPrimary.get());
         }
       });
-
     }
   }
 
@@ -122,6 +121,9 @@ public class TableProcessor {
     if (sqlTypePair == null)
       throw new JavaTypeConversionException(field.getType());
 
+    String defaultValue = FastStrings.isBlank(columnMeta.defaultValue()) ?
+            sqlTypePair.getDefaultValue() : columnMeta.defaultValue();
+
     StringBuilder sb = new StringBuilder("ALTER TABLE %s ADD %s %s NOT NULL "); //Initial = ALTER TABLE table_name ADD colName DATA_TYPE
     if (columnMeta.autoIncrement()) {
       sb.append("AUTO_INCREMENT ");
@@ -130,7 +132,7 @@ public class TableProcessor {
       database.executeUpdate(sb.toString(), tableName, colName, sqlTypePair.getTypeName());
     } else {
       sb.append("DEFAULT %s");
-      database.executeUpdate(sb.toString(), tableName, colName, sqlTypePair.getTypeName(), sqlTypePair.getDefaultValue());
+      database.executeUpdate(sb.toString(), tableName, colName, sqlTypePair.getTypeName(), defaultValue);
     }
   }
 

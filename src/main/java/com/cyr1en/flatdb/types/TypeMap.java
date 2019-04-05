@@ -38,9 +38,10 @@ public class TypeMap {
 
   private static final Map<Class<?>, SQLTypePair> TYPE_MAP;
   private static final Map<Class<?>, SQLTypePair> CUSTOM_TYPE_MAP;
-  private static final Map<Integer, String> TYPE_TO_NAME;
+  public static final Map<Integer, String> TYPE_TO_NAME;
 
   static {
+    TYPE_TO_NAME = extractTypeNames();
     TYPE_MAP = new ImmutableMap.Builder<Class<?>, SQLTypePair>()
             .put(Boolean.class, SQLTypePair.of(Types.BIT, "0"))
             .put(String.class, SQLTypePair.of(Types.VARCHAR, "null"))
@@ -51,7 +52,6 @@ public class TypeMap {
             .put(Double.class, SQLTypePair.of(Types.FLOAT, "0.0"))
             .build();
     CUSTOM_TYPE_MAP = new HashMap<>();
-    TYPE_TO_NAME = extractTypeNames();
   }
 
   public static SQLTypePair getSQLType(Class<?> jClass) {

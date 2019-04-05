@@ -8,6 +8,9 @@ public @interface Column {
 
   String nameOverride() default "";
 
+
+  String defaultValue() default "";
+
   /**
    * Is this column the primary key of a {@link Table}?
    *
