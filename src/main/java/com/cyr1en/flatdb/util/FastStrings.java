@@ -59,6 +59,33 @@ public class FastStrings {
   }
 
   /**
+   * Check if a {@link CharSequence} is numeric.
+   *
+   * <p>This methods checks if the length of the {@link CharSequence}
+   * is 0, if true, that means the sequence is not numeric. This method
+   * also checks if all code points in the sequence are actually numbers.
+   * Refer to {@link FastStrings#charIsNumeric(int)} to learn more
+   * about numeric chars</p>
+   *
+   * @param charSequence {@link CharSequence} that you want to process.
+   * @return if the {@link CharSequence} is numeric.
+   */
+  public static boolean isNumeric(CharSequence charSequence) {
+    if (isBlank(charSequence)) return false;
+    for (int i = 0; i < charSequence.length(); i++) {
+      if (!charIsNumeric((int) charSequence.charAt(i)))
+        return false;
+    }
+    return true;
+  }
+
+  public static boolean charIsNumeric(int codepoint) {
+    if (!Character.isValidCodePoint(codepoint))
+      return false;
+    return codepoint >= 0x0030 && codepoint <= 0x0039;
+  }
+
+  /**
    * Checks if a codepoint of a char is a 'non-printable' char.
    *
    * <p>This method checks if the codepoint provided--from a
