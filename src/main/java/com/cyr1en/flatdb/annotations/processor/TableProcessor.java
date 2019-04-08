@@ -123,6 +123,7 @@ public class TableProcessor {
 
     String defaultValue = FastStrings.isBlank(columnMeta.defaultValue()) ?
             sqlTypePair.getDefaultValue() : columnMeta.defaultValue();
+    defaultValue = encloseIfNeeded(defaultValue);
 
     StringBuilder sb = new StringBuilder("ALTER TABLE %s ADD %s %s NOT NULL "); //Initial = ALTER TABLE table_name ADD colName DATA_TYPE
     if (columnMeta.autoIncrement()) {
@@ -166,5 +167,11 @@ public class TableProcessor {
   private List<Field> filterAnnotatedFields(Stream<Field> fieldStream) {
     return fieldStream.filter(field ->
             field.isAnnotationPresent(Column.class)).collect(Collectors.toList());
+  }
+
+  private String encloseIfNeeded(String s) {
+    if(!FastStrings.isNumeric(s))
+      return "'" + s + "'";
+    return s;
   }
 }
