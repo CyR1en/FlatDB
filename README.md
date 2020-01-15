@@ -1,4 +1,4 @@
-# FlatDB [![](https://jitpack.io/v/cyr1en/flatdb.svg)](https://jitpack.io/#cyr1en/flatdb)
+# FlatDB [![Action Status](https://github.com/CyR1en/FlatDB/workflows/Java%20CI/badge.svg)](https://github.com/CyR1en/FlatDB/actions)[![](https://jitpack.io/v/cyr1en/flatdb.svg)](https://jitpack.io/#cyr1en/flatdb)
 An easy to use library for flat-file databases.
 
 ### Features
