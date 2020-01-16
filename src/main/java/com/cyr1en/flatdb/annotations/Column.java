@@ -1,5 +1,7 @@
 package com.cyr1en.flatdb.annotations;
 
+import com.cyr1en.flatdb.TableProcessor;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -14,7 +16,7 @@ public @interface Column {
   /**
    * Is this column the primary key of a {@link Table}?
    *
-   * <p>You cannot have multiple primary keys. The {@link com.cyr1en.flatdb.annotations.processor.TableProcessor} will
+   * <p>You cannot have multiple primary keys. The {@link TableProcessor} will
    * try to give you a warning and prevent setting this as a primary key before sql execution.
    * However, the TableProcessor will not see if a column is a primary key if it already exists. So make sure
    * that your table doesn't have overlapping primary keys to prevent {@link java.sql.SQLException}.</p>

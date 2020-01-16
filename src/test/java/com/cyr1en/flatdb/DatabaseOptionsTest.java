@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicReference;
@@ -90,5 +91,8 @@ public class DatabaseOptionsTest {
       Assertions.assertThat(dbBuilder.getConnectionURL()).isEqualTo("jdbc:h2:" + finalPath);
       Assertions.assertThat(db).isNotEqualTo(null);
     }).doesNotThrowAnyException();
+    File file = new File(path);
+    if(file.exists())
+      file.delete();
   }
 }

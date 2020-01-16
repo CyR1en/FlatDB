@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.cyr1en.flatdb.annotations.processor;
+package com.cyr1en.flatdb;
 
 import com.cyr1en.flatdb.Database;
 import com.cyr1en.flatdb.FlatTable;
@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,6 +64,7 @@ public class TableProcessor {
     ImmutableList<Field> annotatedFields = checkAnnotatedFields(classToProcess);
 
     String tableName = getTableName(classToProcess);
+    System.out.println(tableName);
     processTable(tableName);
     processColumns(tableName, annotatedFields);
 

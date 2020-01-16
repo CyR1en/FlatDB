@@ -26,29 +26,51 @@ package com.cyr1en.flatdb;
 
 import com.cyr1en.flatdb.annotations.Column;
 import com.cyr1en.flatdb.annotations.Table;
+import com.cyr1en.flatdb.util.DBTablePrinter;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DatabaseBuildTest {
 
   @Test
   public void test() {
+    String path;
+    String OS = (System.getProperty("os.name")).toUpperCase();
+    if (OS.contains("WIN")) {
+      path = System.getenv("AppData");
+      path += "/Local/Temp/FlatDBTest/testDB";
+    } else {
+      path = System.getProperty("user.home");
+      path += "/Library/Caches/TemporaryItems/FlatDBTest/testDB";
+    }
     DatabaseBuilder builder = new DatabaseBuilder()
-            .setPath(System.getProperty("user.dir") + "/testDb/flatDB")
+            .setPath(path)
             .setDatabasePrefix("test_")
             .appendTable(TestTable.class);
 
     AtomicReference<Database> db = new AtomicReference<>();
     Assertions.assertThatCode(() -> db.set(builder.build())).doesNotThrowAnyException();
     Assertions.assertThat(db.get().tableExists("test_table1")).isEqualTo(true);
+    DBTablePrinter.printTable(db.get().getConnection(), "test_table1");
+    File file = new File(path);
+    if(file.exists())
+      file.delete();
   }
 
   @Table(nameOverride = "table1")
   private class TestTable {
-    @Column(primaryKey = true, autoIncrement = true) private int id;
-    @Column private String name;
-    @Column private String lastName;
+    @Column(primaryKey = true, autoIncrement = true)
+    private int id;
+    @Column
+    private String name;
+    @Column
+    private String lastName;
+    @Column
+    private String city;
+    @Column
+    private int zip;
   }
 }
